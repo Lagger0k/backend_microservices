@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+pydantic
+aio_pika
+python-dotenv
+websockets
+requests

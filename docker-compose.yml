@@ -1,0 +1,58 @@
+version: '3.9'
+
+services:
+  backend_app:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    container_name: backend_app
+    environment:
+      - RABBIT_HOST=rabbitmq
+      - RABBIT_PORT=5672
+    depends_on:
+        - rabbitmq
+    ports:
+      - "80:80"
+    networks:
+      - network
+
+  worker:
+    build:
+      context: .
+      dockerfile: worker.Dockerfile
+    container_name: worker_container
+    environment:
+      - RABBIT_HOST=rabbitmq
+      - RABBIT_PORT=5672
+      - WEB_SERVER_HOST=websocket
+      - WEB_SERVER_PORT=7890
+    depends_on:
+      - rabbitmq
+      - backend_app
+    networks:
+      - network
+
+  rabbitmq:
+    container_name: rabbit_container
+    hostname: rabbitmq
+    image: rabbitmq:management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - network
+
+  websocket:
+    build:
+      context: .
+      dockerfile: websocket.Dockerfile
+    container_name: websocket_container
+    hostname: websocket
+    ports:
+      - "7890:7890"
+    networks:
+      - network
+
+networks:
+  network: {}
+
