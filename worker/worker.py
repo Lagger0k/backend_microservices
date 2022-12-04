@@ -19,7 +19,6 @@ async def process_message(
         input_message = message.body.decode("utf-8")
         output_message = "".join(list(input_message)[::-1])
         await send_message(f"input: {input_message}\noutput: {output_message}\n")
-        await asyncio.sleep(1)
 
 
 async def main() -> None:
